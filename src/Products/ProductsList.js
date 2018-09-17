@@ -1,15 +1,20 @@
-import React, { Component } from "react";
+import React from "react";
 import { PropTypes } from "prop-types";
 import Product from "./Product";
+import { Grid, Cell } from "react-mdl";
 
-class ProductsList extends Component {
-  render() {
-    const products = this.props.products.map(product => (
-      <Product key={product.id} {...product} />
-    ));
-    return [products];
-  }
-}
+const ProductsList = props => {
+  const products = props.products.map(product => (
+    <Cell col={4} key={product.id}>
+      <Product {...product} />
+    </Cell>
+  ));
+  return (
+    <div style={{ width: "100%", margin: "auto" }}>
+      <Grid>{products}</Grid>
+    </div>
+  );
+};
 
 ProductsList.propTypes = {
   products: PropTypes.arrayOf(

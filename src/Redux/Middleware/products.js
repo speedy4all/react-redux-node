@@ -31,8 +31,7 @@ export const processProductsCollection = ({ dispatch }) => next => action => {
   next(action);
 
   if (action.type === FETCH_PRODUCTS_SUCCESS) {
-    const filter = action.payload.filter(item => item.unitPrice < 10);
-    dispatch(updateProducts(filter));
+    dispatch(updateProducts(action.payload));
     dispatch(hideSpinner());
   }
 };

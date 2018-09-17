@@ -2,15 +2,18 @@ import React from "react";
 import UserInfo from "../UserPrefs/UserInfo";
 import logo from "../logo.svg";
 import "./Header.css";
+import { Header } from "react-mdl";
 
-export default props => {
+const CustomHeader = props => {
   return (
-    <div className="Header">
+    <Header title="Title">
       <img className="Logo" src={logo} alt="Logo" />
       <UserInfo
         isLoggedIn={props.isLoggedIn}
         buttonHandler={props.buttonHandler}
       />
-    </div>
+    </Header>
   );
 };
+
+export default CustomHeader;
