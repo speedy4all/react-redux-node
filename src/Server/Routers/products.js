@@ -81,11 +81,45 @@ router.post("/", prepareData, async (request, response) => {
 /**
  * Modificare produs existent
  */
-router.put("/", async (request, response) => {});
+router.put("/", prepareData, async (request, response) => {
+  try {
+    const params = request.body.product;
+    if (!params) {
+      return response.send({ error: "Missing product param" });
+    }
+
+    const modifiedProducts = request.products.map(p => {
+      return p.id === params.id ? params : p;
+    });
+    await writeFileAsync(filePath, JSON.stringify(modifiedProducts));
+
+    return response.send(params);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error.message);
+  }
+});
 
 /**
  * Stergere produs existent
  */
-router.delete("/:id", async (request, response) => {});
+router.delete("/:id", prepareData, async (request, response) => {
+  try {
+    const idToDelete = request.params.id;
+
+    const productToDelete = request.products.find(p => p.id === idToDelete);
+    if (!productToDelete) {
+      return response.send({ error: "No product found" });
+    }
+    request.products.remove(productToDelete);
+
+    await writeFileAsync(filePath, JSON.stringify(request.products));
+
+    return response.send({ message: `Deletet prooduct ${idToDelete}` });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error.message);
+  }
+});
 
 module.exports = router;
