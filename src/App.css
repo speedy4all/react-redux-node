@@ -1,0 +1,26 @@
+.App {
+  text-align: center;
+}
+
+.FloatRight {
+  float: right;
+}
+
+.CenterHeader {
+  padding: 10px;
+}
+
+.visible.hidden {
+  visibility: hidden;
+}
+.visible {
+  visibility: visible;
+}
+
+
+
+.selected {
+  background-color: white;
+  font-style: italic;
+}
+
