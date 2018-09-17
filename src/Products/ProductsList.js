@@ -1,20 +1,15 @@
-import React from "react";
+import React, { Component } from "react";
 import { PropTypes } from "prop-types";
 import Product from "./Product";
 
-const ProductsList = props => {
-  const products = props.products.map(product => (
-    <li key={product.id}>
-      <Product {...product} />
-    </li>
-  ));
-
-  return (
-    <div className="ProductsList">
-      <ul>{products}</ul>
-    </div>
-  );
-};
+class ProductsList extends Component {
+  render() {
+    const products = this.props.products.map(product => (
+      <Product key={product.id} {...product} />
+    ));
+    return [products];
+  }
+}
 
 ProductsList.propTypes = {
   products: PropTypes.arrayOf(

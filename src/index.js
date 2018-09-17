@@ -5,6 +5,8 @@ import App from "./App";
 import { Provider } from "react-redux";
 import { store } from "./Redux/store";
 import registerServiceWorker from "./registerServiceWorker";
+import "react-mdl/extra/material.css";
+import "react-mdl/extra/material.js";
 
 ReactDOM.render(
   <Provider store={store}>

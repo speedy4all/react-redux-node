@@ -1,16 +1,39 @@
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { Card, CardTitle, CardText, CardActions, Button } from "react-mdl";
 
-const Product = props => {
-  return (
-    <div className="Product">
-      <span>Name : {props.name}</span>
-      <span>Description : {props.description}</span>
-      <img src={props.photoUrl} alt={props.name} />
-      <span>Unit price: {props.unitPrice}</span>
-    </div>
-  );
-};
+class Product extends Component {
+  render() {
+    const props = this.props;
+
+    return (
+      <Card
+        key={props.id}
+        shadow={0}
+        style={{
+          width: "400px",
+          margin: "20px",
+          flex: 1
+        }}
+      >
+        <CardTitle
+          style={{
+            alignItems: "flex-end",
+            height: "256px",
+            color: "#fff",
+            background: `url(${props.photoUrl}) center / cover`
+          }}
+        >
+          {props.name}
+        </CardTitle>
+        <CardText>{props.description}</CardText>
+        <CardActions border>
+          <CardText>Unit price: {props.unitPrice}</CardText>
+        </CardActions>
+      </Card>
+    );
+  }
+}
 
 Product.propTypes = {
   id: PropTypes.number.isRequired,
