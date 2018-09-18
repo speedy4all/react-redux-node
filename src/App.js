@@ -6,7 +6,7 @@ import { getProducts } from "./Redux/Actions/products";
 import { connect } from "react-redux";
 import ProductsList from "./Products/ProductsList";
 import { menuClicked, createSearchAction } from "./Redux/Actions/ui";
-import { Layout, Navigation, Drawer, Content } from "react-mdl";
+import { Layout, Navigation, Drawer, Content, Spinner } from "react-mdl";
 
 class App extends Component {
   componentWillMount = () => {
@@ -33,6 +33,7 @@ class App extends Component {
               {this.props.ui.menu.map((item, index) => {
                 return (
                   <span
+                    key={index}
                     style={{ cursor: "pointer" }}
                     onClick={() => this.props._menuClickHandler(index)}
                   >
@@ -45,7 +46,7 @@ class App extends Component {
 
           <Content>
             {this.props.ui.pending ? (
-              <div className="Loader">LOADING</div>
+              <Spinner />
             ) : selectedMenu && selectedMenu.route === PRODUCTS_ROUTE ? (
               <ProductsList products={this.props.products} />
             ) : null}

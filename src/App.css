@@ -24,3 +24,11 @@
   font-style: italic;
 }
 
+.mdl-spinner {
+  width: 84px;
+  height: 84px;
+}
+
+.mdl-spinner__circle {
+  border-width: 9px;
+}

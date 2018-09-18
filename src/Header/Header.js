@@ -3,19 +3,23 @@ import UserInfo from "../UserPrefs/UserInfo";
 import logo from "../logo.svg";
 import "./Header.css";
 import { Header, Textfield } from "react-mdl";
+import { debounce } from "lodash";
 
 const CustomHeader = props => {
-  const handler = props.handleSearch;
-  const debounce = e => {
+  const originalHandler = props.handleSearch;
+
+  const debounceAction = debounce(e => {
+    originalHandler(e.target.value);
+  }, 400);
+
+  const changeHandler = e => {
     e.persist();
-    setTimeout(props => {
-      handler(e.target.value);
-    }, 400);
+    debounceAction(e);
   };
   return (
     <Header title="Title">
       <Textfield
-        onChange={debounce}
+        onChange={changeHandler}
         label="Search"
         expandable
         expandableIcon="search"
