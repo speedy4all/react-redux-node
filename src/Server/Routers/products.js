@@ -30,7 +30,15 @@ const checkForValidProductId = (req, res, next) => {
 
 router.get("/", prepareData, async (request, response) => {
   try {
-    return response.send(request.products);
+    let res = request.products;
+    if (request.query.search) {
+      res = request.products.filter(
+        p =>
+          p.name.toLowerCase().search(request.query.search.toLowerCase()) !== -1
+      );
+    }
+
+    return response.send(res);
   } catch (error) {
     console.log(error);
     return res.status(500).send(error.message);
