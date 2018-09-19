@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Card, CardTitle, CardText, CardActions, Button } from "react-mdl";
 
 const Product = props => {
+  const { id } = props;
   return (
     <Card
       shadow={0}
@@ -23,7 +24,7 @@ const Product = props => {
       </CardTitle>
       <CardText>{props.description}</CardText>
       <CardActions border>
-        <Button>Click me</Button>
+        <Button onClick={() => props.onAddToCart(id)}>Add to cart</Button>
         <CardText>Unit price: {props.unitPrice}</CardText>
       </CardActions>
     </Card>

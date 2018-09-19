@@ -2,7 +2,7 @@ import React from "react";
 import UserInfo from "../UserPrefs/UserInfo";
 import logo from "../logo.svg";
 import "./Header.css";
-import { Header, Textfield } from "react-mdl";
+import { Header, Textfield, Badge, Icon } from "react-mdl";
 import { debounce } from "lodash";
 
 const CustomHeader = props => {
@@ -24,6 +24,13 @@ const CustomHeader = props => {
         expandable
         expandableIcon="search"
       />
+      <Badge
+        text={props.orderCount}
+        overlap
+        style={{ marginLeft: "10px", cursor: "pointer" }}
+      >
+        <Icon name="shopping_cart" />
+      </Badge>
       <img className="Logo" src={logo} alt="Logo" />
       <UserInfo
         isLoggedIn={props.isLoggedIn}

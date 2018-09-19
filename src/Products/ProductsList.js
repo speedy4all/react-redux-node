@@ -6,7 +6,7 @@ import { Grid, Cell } from "react-mdl";
 const ProductsList = props => {
   const products = props.products.map(product => (
     <Cell col={4} key={product.id}>
-      <Product {...product} />
+      <Product {...product} onAddToCart={props.onAddToCart} />
     </Cell>
   ));
   return (

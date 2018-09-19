@@ -2,7 +2,12 @@ import {
   MENU_CHANGED,
   newMenuActive,
   SEARCH_TRIGGERED,
-  showSpinner
+  showSpinner,
+  SHOW_ORDER_DIALOG,
+  showDialog,
+  setCurrentOrder,
+  updateCart,
+  CONFIRM_ADD_TO_CART
 } from "./../Actions/ui";
 import { PRODUCTS_ROUTE } from "./../../Menu/Menu";
 import { getProducts, FETCH_PRODUCTS_SUCCESS } from "../Actions/products";
@@ -56,6 +61,33 @@ export const searchActionFlow = ({ dispatch, getState }) => next => action => {
   }
 };
 
+export const showOrderDialogFlow = ({
+  dispatch,
+  getState
+}) => next => action => {
+  next(action);
+  if (action.type === SHOW_ORDER_DIALOG) {
+    const state = getState();
+    const currentOrder = state.products.find(p => p.id === action.payload.id);
+    dispatch(setCurrentOrder(currentOrder));
+    dispatch(showDialog());
+  }
+};
+
+export const addToCartConfirmation = ({
+  dispatch,
+  getState
+}) => next => action => {
+  next(action);
+  if (action.type === CONFIRM_ADD_TO_CART) {
+    const state = getState();
+    const currentProduct = state.ui.currentOrder;
+    const orderIds = [...state.ui.orderIds];
+    orderIds.push(currentProduct.id);
+    dispatch(updateCart(orderIds));
+  }
+};
+
 const getApiConfigForMenu = (activeMenu, action) => {
   if (activeMenu.route === PRODUCTS_ROUTE) {
     return {
@@ -69,4 +101,9 @@ const getApiConfigForMenu = (activeMenu, action) => {
   return null;
 };
 
-export const uiMdl = [menuChangedFlow, searchActionFlow];
+export const uiMdl = [
+  menuChangedFlow,
+  searchActionFlow,
+  showOrderDialogFlow,
+  addToCartConfirmation
+];
