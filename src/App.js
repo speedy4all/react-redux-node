@@ -49,6 +49,7 @@ class App extends Component {
       menuItem => menuItem.selected
     );
     const selectedMenu = selectedMenuList[0];
+    let existing = false;
     return (
       <div className="App">
         <Layout>
@@ -82,7 +83,9 @@ class App extends Component {
               <DialogContent>
                 <span>
                   {this.props.ui.shoppingCart.map(p => {
-                    if (p.id === this.props.ui.currentProduct.id) {
+                    existing = p.id === this.props.ui.currentProduct.id;
+                    if (existing) {
+                      existing;
                       return (
                         <div>
                           <span>Order quantity: {p.quantity}</span>
@@ -102,7 +105,7 @@ class App extends Component {
                   onChange={this.onQuantityChange}
                   pattern="-?[0-9]*(\.[0-9]+)?"
                   error="Input is not a number!"
-                  label="Quantity..."
+                  label={existing ? "Add another..." : "Quantity..."}
                   required
                   floatingLabel
                   value={this.props.ui.currentProduct.quantity}

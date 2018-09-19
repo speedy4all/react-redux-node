@@ -1,6 +1,5 @@
 import React from "react";
 import UserInfo from "../UserPrefs/UserInfo";
-import logo from "../logo.svg";
 import "./Header.css";
 import { Header, Textfield, Badge, Icon } from "react-mdl";
 import { debounce } from "lodash";
@@ -23,6 +22,7 @@ const CustomHeader = props => {
         label="Search"
         expandable
         expandableIcon="search"
+        placeholder="Product name ..."
       />
       <Badge
         text={props.orderCount}
@@ -31,7 +31,6 @@ const CustomHeader = props => {
       >
         <Icon name="shopping_cart" />
       </Badge>
-      <img className="Logo" src={logo} alt="Logo" />
       <UserInfo
         isLoggedIn={props.isLoggedIn}
         buttonHandler={props.buttonHandler}
