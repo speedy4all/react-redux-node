@@ -4,7 +4,9 @@ import {
   NEW_MENU_ACTIVE,
   SHOW_DIALOG,
   HIDE_DIALOG,
-  UPDATE_CART
+  UPDATE_CART,
+  SET_CURRENT_PRODUCT,
+  UPDATE_PRODUCT_QUANTITY
 } from "../Actions/ui";
 import { PRODUCTS_ROUTE, OFFERS_ROUTE } from "./../../Menu/Menu";
 import { CURRENT_ORDER } from "./../Actions/ui";
@@ -12,9 +14,9 @@ import { CURRENT_ORDER } from "./../Actions/ui";
 const initUi = {
   pending: false,
   orderInProgress: false,
-  currentOrder: null,
+  currentProduct: {},
   isLoggedIn: true,
-  orderIds: [],
+  shoppingCart: [],
   menu: [
     {
       name: "Produse",
@@ -51,10 +53,18 @@ export function uiReducer(state = initUi, action) {
     case HIDE_DIALOG:
       return { ...state, orderInProgress: false };
 
-    case CURRENT_ORDER:
-      return { ...state, currentOrder: action.payload };
+    case SET_CURRENT_PRODUCT:
+      return { ...state, currentProduct: action.payload };
+
     case UPDATE_CART:
-      return { ...state, orderIds: action.payload };
+      return { ...state, shoppingCart: action.payload };
+
+    case UPDATE_PRODUCT_QUANTITY:
+      return {
+        ...state,
+        currentProduct: { ...state.currentProduct, quantity: action.payload }
+      };
+
     default:
       return state;
   }

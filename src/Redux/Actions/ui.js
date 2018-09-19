@@ -6,9 +6,10 @@ export const SEARCH_TRIGGERED = "[ui] search event";
 export const SHOW_ORDER_DIALOG = "[ui] show order dialog";
 export const HIDE_DIALOG = "[ui] hide dialog";
 export const SHOW_DIALOG = "[ui] show dialog";
-export const CURRENT_ORDER = "[ui] set current order";
+export const SET_CURRENT_PRODUCT = "[ui] set current product";
 export const CONFIRM_ADD_TO_CART = "[ui] confirm add to cart";
 export const UPDATE_CART = "[ui] update cart";
+export const UPDATE_PRODUCT_QUANTITY = "[ui] update product quantity";
 
 export const showSpinner = () => ({
   type: SHOW_SPINNER
@@ -33,9 +34,9 @@ export const createSearchAction = searchParam => ({
   payload: searchParam
 });
 
-export const showOrderDialog = (id, value) => ({
+export const showOrderDialog = id => ({
   type: SHOW_ORDER_DIALOG,
-  payload: { id, value }
+  payload: id
 });
 
 export const showDialog = () => ({
@@ -46,9 +47,9 @@ export const hideDialog = () => ({
   type: HIDE_DIALOG
 });
 
-export const setCurrentOrder = order => ({
-  type: CURRENT_ORDER,
-  payload: order
+export const setCurrentProduct = product => ({
+  type: SET_CURRENT_PRODUCT,
+  payload: product
 });
 
 export const confirmAddToCart = () => ({
@@ -58,4 +59,9 @@ export const confirmAddToCart = () => ({
 export const updateCart = orderIds => ({
   type: UPDATE_CART,
   payload: orderIds
+});
+
+export const updateProductQuantity = quantity => ({
+  type: UPDATE_PRODUCT_QUANTITY,
+  payload: quantity
 });

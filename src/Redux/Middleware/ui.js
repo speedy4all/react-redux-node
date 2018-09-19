@@ -5,9 +5,11 @@ import {
   showSpinner,
   SHOW_ORDER_DIALOG,
   showDialog,
-  setCurrentOrder,
+  setCurrentProduct,
   updateCart,
-  CONFIRM_ADD_TO_CART
+  CONFIRM_ADD_TO_CART,
+  hideDialog,
+  updateProductQuantity
 } from "./../Actions/ui";
 import { PRODUCTS_ROUTE } from "./../../Menu/Menu";
 import { getProducts, FETCH_PRODUCTS_SUCCESS } from "../Actions/products";
@@ -68,8 +70,8 @@ export const showOrderDialogFlow = ({
   next(action);
   if (action.type === SHOW_ORDER_DIALOG) {
     const state = getState();
-    const currentOrder = state.products.find(p => p.id === action.payload.id);
-    dispatch(setCurrentOrder(currentOrder));
+    const currentProduct = state.products.find(p => p.id === action.payload);
+    dispatch(setCurrentProduct(currentProduct));
     dispatch(showDialog());
   }
 };
@@ -81,10 +83,20 @@ export const addToCartConfirmation = ({
   next(action);
   if (action.type === CONFIRM_ADD_TO_CART) {
     const state = getState();
-    const currentProduct = state.ui.currentOrder;
-    const orderIds = [...state.ui.orderIds];
-    orderIds.push(currentProduct.id);
-    dispatch(updateCart(orderIds));
+    const currentProduct = state.ui.currentProduct;
+    const shoppingCart = [...state.ui.shoppingCart];
+    const existingProduct = shoppingCart.find(p => p.id === currentProduct.id);
+
+    if (existingProduct) {
+      existingProduct.quantity += currentProduct.quantity || 0;
+      dispatch(updateCart(shoppingCart));
+    } else {
+      shoppingCart.push(currentProduct);
+      dispatch(updateCart(shoppingCart));
+    }
+
+    dispatch(hideDialog());
+    dispatch(updateProductQuantity(null));
   }
 };
 

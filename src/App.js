@@ -10,16 +10,28 @@ import {
   createSearchAction,
   hideDialog,
   showOrderDialog,
-  confirmAddToCart
+  confirmAddToCart,
+  updateProductQuantity
 } from "./Redux/Actions/ui";
-import { Layout, Navigation, Drawer, Content, Spinner } from "react-mdl";
-import OrderDialog from "./Products/OrderDialog";
+import {
+  Layout,
+  Navigation,
+  Drawer,
+  Content,
+  Spinner,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Textfield
+} from "react-mdl";
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this._quantityInput = React.createRef();
-    this.onSubmitOrder = this.onSubmitOrder.bind(this);
+
+    this.onQuantityChange = this.onQuantityChange.bind(this);
   }
 
   componentWillMount = () => {
@@ -28,11 +40,8 @@ class App extends Component {
 
   onLogoutClickHandler = event => {};
 
-  onSubmitOrder = e => {
-    this._quantityInput.current.setState({ quantity: "" });
-    this.props._handleCloseDialog();
-    this.props._confirmAddToCart();
-    e.preventDefault();
+  onQuantityChange = e => {
+    this.props._updateProductQuantity(parseInt(e.target.value));
   };
 
   render() {
@@ -47,7 +56,7 @@ class App extends Component {
             handleSearch={this.props._handleSearch}
             isLoggedIn={this.props.ui.isLoggedIn}
             buttonHandler={() => this.onLogoutClickHandler()}
-            orderCount={this.props.ui.orderIds.length}
+            orderCount={this.props.ui.shoppingCart.length}
           />
           <Drawer>
             <Navigation>
@@ -66,14 +75,48 @@ class App extends Component {
           </Drawer>
 
           <Content>
-            <OrderDialog
-              currentProduct={this.props.ui.currentOrder}
-              ref={this._quantityInput}
-              open={this.props.ui.orderInProgress}
-              _handleCloseDialog={this.props._handleCloseDialog}
-              onSubmitOrder={this.onSubmitOrder}
-            />
-
+            <Dialog open={this.props.ui.orderInProgress}>
+              <DialogTitle>
+                Quantity for {this.props.ui.currentProduct.name}
+              </DialogTitle>
+              <DialogContent>
+                <span>
+                  {this.props.ui.shoppingCart.map(p => {
+                    if (p.id === this.props.ui.currentProduct.id) {
+                      return (
+                        <div>
+                          <span>Order quantity: {p.quantity}</span>
+                          <br />
+                        </div>
+                      );
+                    }
+                  })}
+                </span>
+                <span>Total price: </span>
+                <b>
+                  {this.props.ui.currentProduct.quantity *
+                    this.props.ui.currentProduct.unitPrice || 0}
+                </b>
+                <span> RON </span>
+                <Textfield
+                  onChange={this.onQuantityChange}
+                  pattern="-?[0-9]*(\.[0-9]+)?"
+                  error="Input is not a number!"
+                  label="Quantity..."
+                  required
+                  floatingLabel
+                  value={this.props.ui.currentProduct.quantity}
+                />
+              </DialogContent>
+              <DialogActions fullWidth>
+                <Button type="button" onClick={this.props._confirmAddToCart}>
+                  Confirm
+                </Button>
+                <Button type="button" onClick={this.props._handleCloseDialog}>
+                  Cancel
+                </Button>
+              </DialogActions>
+            </Dialog>
             {this.props.ui.pending ? (
               <Spinner />
             ) : selectedMenu && selectedMenu.route === PRODUCTS_ROUTE ? (
@@ -97,7 +140,8 @@ const mapDispatchToProps = dispatch => ({
   _menuClickHandler: index => dispatch(menuClicked(index)),
   _handleCloseDialog: () => dispatch(hideDialog()),
   _onAddToCart: id => dispatch(showOrderDialog(id)),
-  _confirmAddToCart: () => dispatch(confirmAddToCart())
+  _confirmAddToCart: () => dispatch(confirmAddToCart()),
+  _updateProductQuantity: quantity => dispatch(updateProductQuantity(quantity))
 });
 
 export default connect(
