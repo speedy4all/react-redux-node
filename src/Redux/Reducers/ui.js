@@ -8,8 +8,7 @@ import {
   SET_CURRENT_PRODUCT,
   UPDATE_PRODUCT_QUANTITY
 } from "../Actions/ui";
-import { PRODUCTS_ROUTE, OFFERS_ROUTE } from "./../../Menu/Menu";
-import { CURRENT_ORDER } from "./../Actions/ui";
+import { PRODUCTS_ROUTE, SHOPPING_CART, OFFERS_ROUTE } from "./../../Menu/Menu";
 
 const initUi = {
   pending: false,
@@ -29,9 +28,9 @@ const initUi = {
       route: OFFERS_ROUTE
     },
     {
-      name: "Comenzile mele",
+      name: "Shopping cart",
       selected: false,
-      route: null
+      route: SHOPPING_CART
     }
   ]
 };

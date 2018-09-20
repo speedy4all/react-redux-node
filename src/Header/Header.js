@@ -16,7 +16,7 @@ const CustomHeader = props => {
     debounceAction(e);
   };
   return (
-    <Header title="Title">
+    <Header title={props.title}>
       <Textfield
         onChange={changeHandler}
         label="Search"

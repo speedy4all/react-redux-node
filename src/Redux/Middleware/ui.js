@@ -22,8 +22,8 @@ export const menuChangedFlow = ({ dispatch, getState }) => next => action => {
   if (action.type === MENU_CHANGED) {
     let updateProducts = false;
     const state = getState();
-    const newMenu = state.ui.menu.map((item, i) => {
-      item.selected = i === action.payload;
+    const newMenu = state.ui.menu.map(item => {
+      item.selected = item.route === action.payload;
       if (item.selected && item.route === PRODUCTS_ROUTE) {
         updateProducts = true;
       }

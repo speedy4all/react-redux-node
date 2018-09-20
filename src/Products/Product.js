@@ -24,7 +24,13 @@ const Product = props => {
       </CardTitle>
       <CardText>{props.description}</CardText>
       <CardActions border>
-        <Button onClick={() => props.onAddToCart(id)}>Add to cart</Button>
+        <Button
+          raised
+          hidden={props.addButtonDisabled}
+          onClick={() => props.onAddToCart(id)}
+        >
+          Add to cart
+        </Button>
         <CardText>Unit price: {props.unitPrice}</CardText>
       </CardActions>
     </Card>

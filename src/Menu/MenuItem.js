@@ -6,7 +6,7 @@ const MenuItem = props => {
   return (
     <li
       className={props.selected ? "MenuItem selected" : "MenuItem"}
-      onClick={() => props.clickHandler(props.index)}
+      onClick={() => props.clickHandler(props.route)}
     >
       <span className="MenuItemText">{props.name}</span>
     </li>

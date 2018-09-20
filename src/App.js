@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
-import { PRODUCTS_ROUTE } from "./Menu/Menu";
+import { PRODUCTS_ROUTE, SHOPPING_CART } from "./Menu/Menu";
 import Header from "./Header/Header";
 import { getProducts } from "./Redux/Actions/products";
 import { connect } from "react-redux";
@@ -54,6 +54,7 @@ class App extends Component {
       <div className="App">
         <Layout>
           <Header
+            title={selectedMenu.name}
             handleSearch={this.props._handleSearch}
             isLoggedIn={this.props.ui.isLoggedIn}
             buttonHandler={() => this.onLogoutClickHandler()}
@@ -66,7 +67,7 @@ class App extends Component {
                   <span
                     key={index}
                     style={{ cursor: "pointer" }}
-                    onClick={() => this.props._menuClickHandler(index)}
+                    onClick={() => this.props._menuClickHandler(item.route)}
                   >
                     {item.name}
                   </span>
@@ -123,10 +124,20 @@ class App extends Component {
             {this.props.ui.pending ? (
               <Spinner />
             ) : selectedMenu && selectedMenu.route === PRODUCTS_ROUTE ? (
-              <ProductsList
-                products={this.props.products}
-                onAddToCart={this.props._onAddToCart}
-              />
+              <div>
+                <ProductsList
+                  products={this.props.products}
+                  onAddToCart={this.props._onAddToCart}
+                />
+              </div>
+            ) : selectedMenu && selectedMenu.route === SHOPPING_CART ? (
+              <div>
+                <ProductsList
+                  products={this.props.ui.shoppingCart}
+                  addButtonDisabled
+                  onAddToCart={() => {}}
+                />
+              </div>
             ) : null}
           </Content>
         </Layout>
@@ -140,7 +151,7 @@ const mapStateToProps = state => state;
 const mapDispatchToProps = dispatch => ({
   _handleSearch: val => dispatch(createSearchAction(val)),
   _getProducts: () => dispatch(getProducts()),
-  _menuClickHandler: index => dispatch(menuClicked(index)),
+  _menuClickHandler: route => dispatch(menuClicked(route)),
   _handleCloseDialog: () => dispatch(hideDialog()),
   _onAddToCart: id => dispatch(showOrderDialog(id)),
   _confirmAddToCart: () => dispatch(confirmAddToCart()),

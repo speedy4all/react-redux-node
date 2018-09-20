@@ -19,9 +19,9 @@ export const hideSpinner = () => ({
   type: HIDE_SPINNER
 });
 
-export const menuClicked = index => ({
+export const menuClicked = route => ({
   type: MENU_CHANGED,
-  payload: index
+  payload: route
 });
 
 export const newMenuActive = data => ({
