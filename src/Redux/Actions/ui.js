@@ -10,6 +10,8 @@ export const SET_CURRENT_PRODUCT = "[ui] set current product";
 export const CONFIRM_ADD_TO_CART = "[ui] confirm add to cart";
 export const UPDATE_CART = "[ui] update cart";
 export const UPDATE_PRODUCT_QUANTITY = "[ui] update product quantity";
+export const SHOW_DELETE_DIALOG = "[ui] show delete dialog";
+export const HIDE_DELETE_DIALOG = "[ui] hide delete dialog";
 
 export const showSpinner = () => ({
   type: SHOW_SPINNER
@@ -19,9 +21,9 @@ export const hideSpinner = () => ({
   type: HIDE_SPINNER
 });
 
-export const menuClicked = index => ({
+export const menuClicked = route => ({
   type: MENU_CHANGED,
-  payload: index
+  payload: route
 });
 
 export const newMenuActive = data => ({
@@ -56,12 +58,20 @@ export const confirmAddToCart = () => ({
   type: CONFIRM_ADD_TO_CART
 });
 
-export const updateCart = orderIds => ({
+export const updateCart = shoppingCart => ({
   type: UPDATE_CART,
-  payload: orderIds
+  payload: shoppingCart
 });
 
 export const updateProductQuantity = quantity => ({
   type: UPDATE_PRODUCT_QUANTITY,
   payload: quantity
+});
+
+export const showDeleteDialog = () => ({
+  type: SHOW_DELETE_DIALOG
+});
+
+export const hideDeleteDialog = () => ({
+  type: HIDE_DELETE_DIALOG
 });

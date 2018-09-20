@@ -6,14 +6,16 @@ import {
   HIDE_DIALOG,
   UPDATE_CART,
   SET_CURRENT_PRODUCT,
-  UPDATE_PRODUCT_QUANTITY
+  UPDATE_PRODUCT_QUANTITY,
+  HIDE_DELETE_DIALOG,
+  SHOW_DELETE_DIALOG
 } from "../Actions/ui";
-import { PRODUCTS_ROUTE, OFFERS_ROUTE } from "./../../Menu/Menu";
-import { CURRENT_ORDER } from "./../Actions/ui";
+import { PRODUCTS_ROUTE, OFFERS_ROUTE, SHOPPING_CART } from "./../../Menu/Menu";
 
 const initUi = {
   pending: false,
   orderInProgress: false,
+  deleteInProgress: false,
   currentProduct: {},
   isLoggedIn: true,
   shoppingCart: [],
@@ -29,9 +31,9 @@ const initUi = {
       route: OFFERS_ROUTE
     },
     {
-      name: "Comenzile mele",
+      name: "Shopping cart",
       selected: false,
-      route: null
+      route: SHOPPING_CART
     }
   ]
 };
@@ -57,7 +59,7 @@ export function uiReducer(state = initUi, action) {
       return { ...state, currentProduct: action.payload };
 
     case UPDATE_CART:
-      return { ...state, shoppingCart: action.payload };
+      return { ...state, shoppingCart: [...action.payload] };
 
     case UPDATE_PRODUCT_QUANTITY:
       return {
@@ -65,6 +67,11 @@ export function uiReducer(state = initUi, action) {
         currentProduct: { ...state.currentProduct, quantity: action.payload }
       };
 
+    case SHOW_DELETE_DIALOG:
+      return { ...state, deleteInProgress: true };
+
+    case HIDE_DELETE_DIALOG:
+      return { ...state, deleteInProgress: false };
     default:
       return state;
   }

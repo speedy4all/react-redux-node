@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import "./App.css";
-import { PRODUCTS_ROUTE } from "./Menu/Menu";
+import { PRODUCTS_ROUTE, SHOPPING_CART } from "./Menu/Menu";
 import Header from "./Header/Header";
-import { getProducts } from "./Redux/Actions/products";
+import { getProducts, deleteProduct } from "./Redux/Actions/products";
 import { connect } from "react-redux";
 import ProductsList from "./Products/ProductsList";
 import {
@@ -11,7 +11,9 @@ import {
   hideDialog,
   showOrderDialog,
   confirmAddToCart,
-  updateProductQuantity
+  updateProductQuantity,
+  showDeleteDialog,
+  hideDeleteDialog
 } from "./Redux/Actions/ui";
 import {
   Layout,
@@ -30,8 +32,11 @@ import {
 class App extends Component {
   constructor(props) {
     super(props);
-
+    this.idToBeDeleted = null;
+    this.deleteInProgress = this.deleteInProgress.bind(this);
+    this.onDeleteConfirm = this.onDeleteConfirm.bind(this);
     this.onQuantityChange = this.onQuantityChange.bind(this);
+    this.shoppingCartAction = this.shoppingCartAction.bind(this);
   }
 
   componentWillMount = () => {
@@ -41,7 +46,23 @@ class App extends Component {
   onLogoutClickHandler = event => {};
 
   onQuantityChange = e => {
-    this.props._updateProductQuantity(parseInt(e.target.value));
+    const val = parseInt(e.target.value);
+    if (!isNaN(val)) {
+      this.props._updateProductQuantity(val);
+    }
+  };
+
+  shoppingCartAction = route => {
+    this.props._menuClickHandler(route);
+  };
+
+  onDeleteConfirm = () => {
+    this.props._onDeleteProduct(this.idToBeDeleted);
+  };
+
+  deleteInProgress = id => {
+    this.idToBeDeleted = id;
+    this.props._onDeleteInProgress();
   };
 
   render() {
@@ -54,10 +75,12 @@ class App extends Component {
       <div className="App">
         <Layout>
           <Header
+            title={selectedMenu.name}
             handleSearch={this.props._handleSearch}
             isLoggedIn={this.props.ui.isLoggedIn}
             buttonHandler={() => this.onLogoutClickHandler()}
             orderCount={this.props.ui.shoppingCart.length}
+            shoppingCartAction={this.shoppingCartAction}
           />
           <Drawer>
             <Navigation>
@@ -66,7 +89,7 @@ class App extends Component {
                   <span
                     key={index}
                     style={{ cursor: "pointer" }}
-                    onClick={() => this.props._menuClickHandler(index)}
+                    onClick={() => this.props._menuClickHandler(item.route)}
                   >
                     {item.name}
                   </span>
@@ -85,7 +108,6 @@ class App extends Component {
                   {this.props.ui.shoppingCart.map(p => {
                     existing = p.id === this.props.ui.currentProduct.id;
                     if (existing) {
-                      existing;
                       return (
                         <div>
                           <span>Order quantity: {p.quantity}</span>
@@ -120,12 +142,45 @@ class App extends Component {
                 </Button>
               </DialogActions>
             </Dialog>
+            <Dialog open={this.props.ui.deleteInProgress}>
+              <DialogTitle>Are you sure ?</DialogTitle>
+              <DialogContent>
+                <p>This action can not be undone !</p>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={this.onDeleteConfirm}
+                  ripple
+                  raised
+                  primary
+                  type="button"
+                >
+                  Yes
+                </Button>
+                <Button
+                  onClick={this.props._onDeleteCancelled}
+                  ripple
+                  raised
+                  accent
+                  type="button"
+                >
+                  No
+                </Button>
+              </DialogActions>
+            </Dialog>
             {this.props.ui.pending ? (
               <Spinner />
             ) : selectedMenu && selectedMenu.route === PRODUCTS_ROUTE ? (
               <ProductsList
                 products={this.props.products}
                 onAddToCart={this.props._onAddToCart}
+              />
+            ) : selectedMenu && selectedMenu.route === SHOPPING_CART ? (
+              <ProductsList
+                editMode
+                products={this.props.ui.shoppingCart}
+                onAddToCart={this.props._onAddToCart}
+                onDeleteProduct={this.deleteInProgress}
               />
             ) : null}
           </Content>
@@ -140,11 +195,14 @@ const mapStateToProps = state => state;
 const mapDispatchToProps = dispatch => ({
   _handleSearch: val => dispatch(createSearchAction(val)),
   _getProducts: () => dispatch(getProducts()),
-  _menuClickHandler: index => dispatch(menuClicked(index)),
+  _menuClickHandler: route => dispatch(menuClicked(route)),
   _handleCloseDialog: () => dispatch(hideDialog()),
   _onAddToCart: id => dispatch(showOrderDialog(id)),
   _confirmAddToCart: () => dispatch(confirmAddToCart()),
-  _updateProductQuantity: quantity => dispatch(updateProductQuantity(quantity))
+  _updateProductQuantity: quantity => dispatch(updateProductQuantity(quantity)),
+  _onDeleteProduct: productId => dispatch(deleteProduct(productId)),
+  _onDeleteInProgress: () => dispatch(showDeleteDialog()),
+  _onDeleteCancelled: () => dispatch(hideDeleteDialog())
 });
 
 export default connect(

@@ -1,5 +1,6 @@
 import React from "react";
 import "./UserInfo.css";
+import { Button } from "react-mdl";
 
 export default props => {
   const headerContainerClass = `FloatRight CenterHeader visible ${
@@ -7,12 +8,18 @@ export default props => {
   }`;
   return (
     <div className={headerContainerClass}>
-      <a className="UserContainer" href="/logout">
+      <span className="UserContainer" href="/logout" style={{ color: "white" }}>
         User name
-      </a>
-      <button className="LogoutBtn" onClick={props.buttonHandler}>
+      </span>
+      <Button
+        raised
+        ripple
+        accent
+        onClick={props.buttonHandler}
+        style={{ marginLeft: "10px" }}
+      >
         Logout
-      </button>
+      </Button>
     </div>
   );
 };

@@ -22,8 +22,8 @@ export const menuChangedFlow = ({ dispatch, getState }) => next => action => {
   if (action.type === MENU_CHANGED) {
     let updateProducts = false;
     const state = getState();
-    const newMenu = state.ui.menu.map((item, i) => {
-      item.selected = i === action.payload;
+    const newMenu = state.ui.menu.map(item => {
+      item.selected = item.route === action.payload;
       if (item.selected && item.route === PRODUCTS_ROUTE) {
         updateProducts = true;
       }
@@ -88,7 +88,10 @@ export const addToCartConfirmation = ({
     const existingProduct = shoppingCart.find(p => p.id === currentProduct.id);
 
     if (existingProduct) {
-      existingProduct.quantity += currentProduct.quantity || 0;
+      existingProduct.quantity += currentProduct.quantity;
+      if (existingProduct.quantity <= 0) {
+        shoppingCart.splice(shoppingCart.indexOf(existingProduct), 1);
+      }
       dispatch(updateCart(shoppingCart));
     } else {
       shoppingCart.push(currentProduct);

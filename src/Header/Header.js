@@ -3,6 +3,7 @@ import UserInfo from "../UserPrefs/UserInfo";
 import "./Header.css";
 import { Header, Textfield, Badge, Icon } from "react-mdl";
 import { debounce } from "lodash";
+import { SHOPPING_CART } from "./../Menu/Menu";
 
 const CustomHeader = props => {
   const originalHandler = props.handleSearch;
@@ -16,7 +17,7 @@ const CustomHeader = props => {
     debounceAction(e);
   };
   return (
-    <Header title="Title">
+    <Header title={props.title}>
       <Textfield
         onChange={changeHandler}
         label="Search"
@@ -28,6 +29,7 @@ const CustomHeader = props => {
         text={props.orderCount}
         overlap
         style={{ marginLeft: "10px", cursor: "pointer" }}
+        onClick={() => props.shoppingCartAction(SHOPPING_CART)}
       >
         <Icon name="shopping_cart" />
       </Badge>

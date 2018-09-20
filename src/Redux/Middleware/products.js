@@ -3,9 +3,15 @@ import {
   FETCH_PRODUCTS_ERROR,
   GET_PRODUCTS,
   SELECT_PRODUCT,
-  updateProducts
+  updateProducts,
+  DELETE_PRODUCT
 } from "../Actions/products";
-import { showSpinner, hideSpinner } from "./../Actions/ui";
+import {
+  showSpinner,
+  hideSpinner,
+  updateCart,
+  hideDeleteDialog
+} from "./../Actions/ui";
 import { apiRequest } from "./../Actions/api";
 
 // this middleware only care about the getProducts action
@@ -46,8 +52,26 @@ export const selectProductFlow = ({ dispatch }) => next => action => {
   }
 };
 
+export const deleteShoppingCartProductFlow = ({
+  dispatch,
+  getState
+}) => next => action => {
+  next(action);
+  if (action.type === DELETE_PRODUCT) {
+    const state = getState();
+    const newShoppingCart = [...state.ui.shoppingCart];
+    const productToDelete = newShoppingCart.find(p => p.id === action.payload);
+    if (productToDelete) {
+      newShoppingCart.splice(newShoppingCart.indexOf(productToDelete), 1);
+    }
+    dispatch(updateCart(newShoppingCart));
+    dispatch(hideDeleteDialog());
+  }
+};
+
 export const productsMdl = [
   getProductsFlow,
   processProductsCollection,
-  selectProductFlow
+  selectProductFlow,
+  deleteShoppingCartProductFlow
 ];

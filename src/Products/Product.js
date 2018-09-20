@@ -22,10 +22,43 @@ const Product = props => {
       >
         {props.name}
       </CardTitle>
-      <CardText>{props.description}</CardText>
+      <CardText style={{ textAlign: "left", padding: "10px 33px" }}>
+        <div>Unit price: {props.unitPrice} RON</div>
+        {props.description}
+        {props.editMode ? (
+          <div style={{ paddingTop: "10px" }}>
+            <div>Order quantity: {props.quantity} pcs</div>
+            <div>Total price: {props.quantity * props.unitPrice} RON</div>
+          </div>
+        ) : null}
+      </CardText>
+
       <CardActions border>
-        <Button onClick={() => props.onAddToCart(id)}>Add to cart</Button>
-        <CardText>Unit price: {props.unitPrice}</CardText>
+        <Button
+          colored
+          hidden={props.editMode}
+          onClick={() => props.onAddToCart(id)}
+        >
+          Add to cart
+        </Button>
+        <Button
+          primary
+          raised
+          hidden={!props.editMode}
+          onClick={() => props.onAddToCart(id)}
+        >
+          Change quantity
+        </Button>
+        <Button
+          accent
+          ripple
+          raised
+          style={{ marginLeft: "10px" }}
+          hidden={!props.editMode}
+          onClick={() => props.onDeleteProduct(id)}
+        >
+          Remove
+        </Button>
       </CardActions>
     </Card>
   );
