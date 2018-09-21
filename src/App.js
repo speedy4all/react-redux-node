@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import "./App.css";
-import { PRODUCTS_ROUTE, SHOPPING_CART } from "./Menu/Menu";
 import Header from "./Header/Header";
 import { getProducts, deleteProduct } from "./Redux/Actions/products";
 import { connect } from "react-redux";
-import ProductsList from "./Products/ProductsList";
+import ContentContainer from "./Containers/ContentContainer";
 import {
   menuClicked,
   createSearchAction,
@@ -15,19 +14,10 @@ import {
   showDeleteDialog,
   hideDeleteDialog
 } from "./Redux/Actions/ui";
-import {
-  Layout,
-  Navigation,
-  Drawer,
-  Content,
-  Spinner,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Textfield
-} from "react-mdl";
+import { Layout, Content } from "react-mdl";
+import NavigationComponent from "./Navigation/NavigationComponent";
+import AddProductDialog from "./Products/AddProductDialog";
+import DeleteProductDialog from "./Products/DeleteProductDialog";
 
 class App extends Component {
   constructor(props) {
@@ -49,6 +39,8 @@ class App extends Component {
     const val = parseInt(e.target.value);
     if (!isNaN(val)) {
       this.props._updateProductQuantity(val);
+    } else {
+      this.props._updateProductQuantity(null);
     }
   };
 
@@ -70,7 +62,7 @@ class App extends Component {
       menuItem => menuItem.selected
     );
     const selectedMenu = selectedMenuList[0];
-    let existing = false;
+
     return (
       <div className="App">
         <Layout>
@@ -82,107 +74,33 @@ class App extends Component {
             orderCount={this.props.ui.shoppingCart.length}
             shoppingCartAction={this.shoppingCartAction}
           />
-          <Drawer>
-            <Navigation>
-              {this.props.ui.menu.map((item, index) => {
-                return (
-                  <span
-                    key={index}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => this.props._menuClickHandler(item.route)}
-                  >
-                    {item.name}
-                  </span>
-                );
-              })}
-            </Navigation>
-          </Drawer>
+          <NavigationComponent
+            menu={this.props.ui.menu}
+            menuClickHandler={this.props._menuClickHandler}
+          />
 
           <Content>
-            <Dialog open={this.props.ui.orderInProgress}>
-              <DialogTitle>
-                Quantity for {this.props.ui.currentProduct.name}
-              </DialogTitle>
-              <DialogContent>
-                <span>
-                  {this.props.ui.shoppingCart.map(p => {
-                    existing = p.id === this.props.ui.currentProduct.id;
-                    if (existing) {
-                      return (
-                        <div>
-                          <span>Order quantity: {p.quantity}</span>
-                          <br />
-                        </div>
-                      );
-                    }
-                  })}
-                </span>
-                <span>Total price: </span>
-                <b>
-                  {this.props.ui.currentProduct.quantity *
-                    this.props.ui.currentProduct.unitPrice || 0}
-                </b>
-                <span> RON </span>
-                <Textfield
-                  onChange={this.onQuantityChange}
-                  pattern="-?[0-9]*(\.[0-9]+)?"
-                  error="Input is not a number!"
-                  label={existing ? "Add another..." : "Quantity..."}
-                  required
-                  floatingLabel
-                  value={this.props.ui.currentProduct.quantity}
-                />
-              </DialogContent>
-              <DialogActions fullWidth>
-                <Button type="button" onClick={this.props._confirmAddToCart}>
-                  Confirm
-                </Button>
-                <Button type="button" onClick={this.props._handleCloseDialog}>
-                  Cancel
-                </Button>
-              </DialogActions>
-            </Dialog>
-            <Dialog open={this.props.ui.deleteInProgress}>
-              <DialogTitle>Are you sure ?</DialogTitle>
-              <DialogContent>
-                <p>This action can not be undone !</p>
-              </DialogContent>
-              <DialogActions>
-                <Button
-                  onClick={this.onDeleteConfirm}
-                  ripple
-                  raised
-                  primary
-                  type="button"
-                >
-                  Yes
-                </Button>
-                <Button
-                  onClick={this.props._onDeleteCancelled}
-                  ripple
-                  raised
-                  accent
-                  type="button"
-                >
-                  No
-                </Button>
-              </DialogActions>
-            </Dialog>
-            {this.props.ui.pending ? (
-              <Spinner />
-            ) : selectedMenu && selectedMenu.route === PRODUCTS_ROUTE ? (
-              <ProductsList
-                products={this.props.products}
-                onAddToCart={this.props._onAddToCart}
-              />
-            ) : selectedMenu && selectedMenu.route === SHOPPING_CART ? (
-              <ProductsList
-                editMode
-                products={this.props.ui.shoppingCart}
-                onAddToCart={this.props._onAddToCart}
-                onDeleteProduct={this.deleteInProgress}
-              />
-            ) : null}
+            <AddProductDialog
+              open={this.props.ui.orderInProgress}
+              shoppingCart={this.props.ui.shoppingCart}
+              currentProduct={this.props.ui.currentProduct}
+              onQuantityChange={this.onQuantityChange}
+              confirmAddToCart={this.props._confirmAddToCart}
+              handleCloseDialog={this.props._handleCloseDialog}
+            />
+            <DeleteProductDialog
+              open={this.props.ui.deleteInProgress}
+              onDeleteConfirm={this.onDeleteConfirm}
+              onDeleteCancelled={this.props._onDeleteCancelled}
+            />
+            <ContentContainer
+              loading={this.props.ui.pending}
+              selectedMenu={selectedMenu}
+              products={this.props.products}
+              shoppingCart={this.props.ui.shoppingCart}
+              onAddToCart={this.props._onAddToCart}
+              deleteInProgress={this.deleteInProgress}
+            />
           </Content>
         </Layout>
       </div>
