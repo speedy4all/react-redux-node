@@ -13,19 +13,21 @@ const AddProductDialog = props => {
   let existing = false;
   return (
     <Dialog open={props.open}>
-      <DialogTitle>Quantity for {currentProduct.name}</DialogTitle>
+      <DialogTitle style={{ marginBottom: "10px" }}>Edit quantity</DialogTitle>
+      <span>Product name: {currentProduct.name}</span>
       <DialogContent>
         <span>
           {props.shoppingCart.map(p => {
             existing = p.id === currentProduct.id;
             if (existing) {
               return (
-                <div>
+                <div key={p.id}>
                   <span>Order quantity: {p.quantity}</span>
                   <br />
                 </div>
               );
             }
+            return null;
           })}
         </span>
         <span>Total price: </span>

@@ -99,7 +99,7 @@ export const addToCartConfirmation = ({
     }
 
     dispatch(hideDialog());
-    dispatch(updateProductQuantity(null));
+    dispatch(updateProductQuantity(""));
   }
 };
 

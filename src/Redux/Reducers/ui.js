@@ -16,7 +16,7 @@ const initUi = {
   pending: false,
   orderInProgress: false,
   deleteInProgress: false,
-  currentProduct: {},
+  currentProduct: { quantity: "" },
   isLoggedIn: true,
   shoppingCart: [],
   menu: [

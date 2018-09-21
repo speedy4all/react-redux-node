@@ -33,14 +33,16 @@ class App extends Component {
     this.props._getProducts();
   };
 
-  onLogoutClickHandler = event => {};
+  onLogoutClickHandler = event => {
+    console.log("Logout action triggered");
+  };
 
   onQuantityChange = e => {
-    const val = parseInt(e.target.value);
+    const val = parseInt(e.target.value, 10);
     if (!isNaN(val)) {
       this.props._updateProductQuantity(val);
     } else {
-      this.props._updateProductQuantity(null);
+      this.props._updateProductQuantity("");
     }
   };
 
